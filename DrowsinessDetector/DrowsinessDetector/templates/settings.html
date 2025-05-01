@@ -1,0 +1,193 @@
+{% extends "layout.html" %}
+
+{% block head %}
+<title>DrowsAlert - Settings</title>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-cog me-2"></i> System Settings</h5>
+            </div>
+            <div class="card-body">
+                <form id="settingsForm">
+                    <div class="mb-4">
+                        <h5><i class="fas fa-sliders me-2"></i> Detection Sensitivity</h5>
+                        <div class="setting-section">
+                            <div class="mb-3">
+                                <label for="sensitivitySelect" class="form-label">Drowsiness Detection Sensitivity</label>
+                                <select class="form-select" id="sensitivitySelect" name="sensitivity">
+                                    <option value="low">Low</option>
+                                    <option value="medium" selected>Medium</option>
+                                    <option value="high">High</option>
+                                </select>
+                                <div class="form-text">Higher sensitivity may result in more alerts but also more false positives.</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="earThreshold" class="form-label">Eye Aspect Ratio (EAR) Threshold</label>
+                                <div class="d-flex align-items-center">
+                                    <input type="range" class="form-range flex-grow-1 me-2" id="earThreshold" name="ear_threshold" min="0.15" max="0.35" step="0.01" value="0.25">
+                                    <span id="earThresholdValue" class="badge bg-primary">0.25</span>
+                                </div>
+                                <div class="form-text">Lower values require eyes to be more closed to trigger drowsiness detection.</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="earFrames" class="form-label">Consecutive Frames Threshold</label>
+                                <div class="d-flex align-items-center">
+                                    <input type="range" class="form-range flex-grow-1 me-2" id="earFrames" name="ear_frames" min="5" max="40" step="1" value="20">
+                                    <span id="earFramesValue" class="badge bg-primary">20</span>
+                                </div>
+                                <div class="form-text">Higher values require eyes to be closed for longer to trigger an alert.</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h5><i class="fas fa-bell me-2"></i> Alert Settings</h5>
+                        <div class="setting-section">
+                            <div class="mb-3 form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="alertSound" name="alert_sound" checked>
+                                <label class="form-check-label" for="alertSound">Enable Audio Alerts</label>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="alertVolume" class="form-label">Alert Volume</label>
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-volume-low me-2"></i>
+                                    <input type="range" class="form-range flex-grow-1 mx-2" id="alertVolume" name="alert_volume" min="0" max="100" value="80">
+                                    <i class="fas fa-volume-high ms-2"></i>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3 form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="alertVisual" name="alert_visual" checked>
+                                <label class="form-check-label" for="alertVisual">Enable Visual Alerts</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h5><i class="fas fa-camera me-2"></i> Camera Settings</h5>
+                        <div class="setting-section">
+                            <div class="mb-3">
+                                <label for="cameraSelect" class="form-label">Camera Source</label>
+                                <select class="form-select" id="cameraSelect" name="camera_id">
+                                    <option value="0" selected>Default Camera</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3 form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="showLandmarks" name="show_landmarks" checked>
+                                <label class="form-check-label" for="showLandmarks">Show Facial Landmarks</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center">
+                        <button type="submit" id="saveSettingsBtn" class="btn btn-primary px-4">
+                            <i class="fas fa-save me-2"></i> Save Settings
+                        </button>
+                        <button type="button" id="resetSettingsBtn" class="btn btn-outline-secondary px-4 ms-2">
+                            <i class="fas fa-undo me-2"></i> Reset to Defaults
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-question-circle me-2"></i> Help & Information</h5>
+            </div>
+            <div class="card-body">
+                <div class="accordion" id="helpAccordion">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+                                How does the drowsiness detection work?
+                            </button>
+                        </h2>
+                        <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#helpAccordion">
+                            <div class="accordion-body">
+                                <p>Our system uses computer vision to track your eye movements and facial features. It calculates the Eye Aspect Ratio (EAR), which measures how open or closed your eyes are. When your eyes remain closed or nearly closed for a certain period, the system determines that you're experiencing drowsiness and triggers an alert.</p>
+                                <p>The settings on this page allow you to customize the sensitivity of this detection to match your personal characteristics.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo">
+                                What do the sensitivity settings mean?
+                            </button>
+                        </h2>
+                        <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#helpAccordion">
+                            <div class="accordion-body">
+                                <ul>
+                                    <li><strong>EAR Threshold:</strong> The Eye Aspect Ratio value that determines when your eyes are considered "closed." Lower values are more lenient.</li>
+                                    <li><strong>Consecutive Frames:</strong> How many consecutive frames your eyes must be closed before triggering an alert. Higher values require longer eye closure.</li>
+                                    <li><strong>Sensitivity Preset:</strong> A combination of settings optimized for different use cases:
+                                        <ul>
+                                            <li><strong>Low:</strong> Minimal alerts, only for significant drowsiness (EAR: 0.2, Frames: 30)</li>
+                                            <li><strong>Medium:</strong> Balanced detection (EAR: 0.25, Frames: 20)</li>
+                                            <li><strong>High:</strong> Early warnings, more alerts (EAR: 0.28, Frames: 15)</li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree">
+                                Troubleshooting common issues
+                            </button>
+                        </h2>
+                        <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#helpAccordion">
+                            <div class="accordion-body">
+                                <p><strong>Camera not working?</strong></p>
+                                <ul>
+                                    <li>Make sure you've granted camera permissions in your browser</li>
+                                    <li>Try selecting a different camera source if available</li>
+                                    <li>Close other applications that might be using your camera</li>
+                                    <li>Refresh the page and try again</li>
+                                </ul>
+                                
+                                <p><strong>False alerts?</strong></p>
+                                <ul>
+                                    <li>Adjust the EAR threshold to a lower value</li>
+                                    <li>Increase the consecutive frames setting</li>
+                                    <li>Ensure good lighting conditions</li>
+                                    <li>Remove glasses if possible, or ensure they don't reflect light</li>
+                                </ul>
+                                
+                                <p><strong>Missing alerts?</strong></p>
+                                <ul>
+                                    <li>Increase the EAR threshold</li>
+                                    <li>Decrease the consecutive frames setting</li>
+                                    <li>Make sure your face is clearly visible to the camera</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/settings.js') }}"></script>
+<script>
+    // Initialize settings page specific scripts
+    document.addEventListener('DOMContentLoaded', function() {
+        initSettings();
+    });
+</script>
+{% endblock %}

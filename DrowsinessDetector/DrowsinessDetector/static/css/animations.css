@@ -1,0 +1,184 @@
+/* Animation Keyframes */
+@keyframes pulse {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0.7;
+    }
+}
+
+@keyframes shake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    10%, 30%, 50%, 70%, 90% {
+        transform: translateX(-5px);
+    }
+    20%, 40%, 60%, 80% {
+        transform: translateX(5px);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideInUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes indicator-pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(108, 92, 231, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(108, 92, 231, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(108, 92, 231, 0);
+    }
+}
+
+/* Animation Classes */
+.fade-in {
+    animation: fadeIn 0.5s ease forwards;
+}
+
+.slide-in-up {
+    animation: slideInUp 0.5s ease forwards;
+}
+
+.slide-in-right {
+    animation: slideInRight 0.5s ease forwards;
+}
+
+.pulse {
+    animation: pulse 2s infinite alternate;
+}
+
+.shake {
+    animation: shake 0.5s ease;
+}
+
+.rotate {
+    animation: rotate 2s linear infinite;
+}
+
+/* Animated elements */
+.navbar-brand i {
+    animation: pulse 2s infinite alternate;
+}
+
+.card {
+    animation: fadeIn 0.5s ease;
+}
+
+.dashboard-stat {
+    animation: slideInUp 0.5s ease both;
+    animation-delay: calc(var(--animation-order) * 0.1s);
+}
+
+.insight-item {
+    animation: slideInRight 0.5s ease both;
+    animation-delay: calc(var(--animation-order) * 0.1s);
+}
+
+/* Add animation delays for staggered animations */
+.card:nth-child(1) {
+    --animation-order: 1;
+}
+
+.card:nth-child(2) {
+    --animation-order: 2;
+}
+
+.card:nth-child(3) {
+    --animation-order: 3;
+}
+
+.dashboard-stat:nth-child(1) {
+    --animation-order: 1;
+}
+
+.dashboard-stat:nth-child(2) {
+    --animation-order: 2;
+}
+
+.dashboard-stat:nth-child(3) {
+    --animation-order: 3;
+}
+
+.dashboard-stat:nth-child(4) {
+    --animation-order: 4;
+}
+
+.insight-item:nth-child(1) {
+    --animation-order: 1;
+}
+
+.insight-item:nth-child(2) {
+    --animation-order: 2;
+}
+
+.insight-item:nth-child(3) {
+    --animation-order: 3;
+}
+
+/* Hover animations */
+.btn:hover {
+    animation: pulse 1s infinite alternate;
+}
+
+.nav-link:hover i {
+    animation: rotate 2s linear infinite;
+}
+
+/* Alert animations */
+.alert-status.alert {
+    animation: pulse 1s infinite alternate, shake 0.5s ease;
+}
+
+/* Loading spinner */
+.spinner-border {
+    animation: rotate 1s linear infinite;
+}
+
+/* Animation for chart elements */
+.chart-container {
+    opacity: 0;
+    animation: fadeIn 0.5s ease forwards;
+    animation-delay: 0.3s;
+}

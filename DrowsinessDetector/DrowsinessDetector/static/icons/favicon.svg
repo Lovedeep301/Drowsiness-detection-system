@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <circle cx="50" cy="50" r="45" fill="#2d3436" stroke="#6c5ce7" stroke-width="5" />
+  <g fill="#6c5ce7">
+    <!-- Eye -->
+    <ellipse cx="50" cy="40" rx="25" ry="15" />
+    <!-- Pupil -->
+    <circle cx="50" cy="40" r="8" fill="#2d3436" />
+    <!-- Eyelid -->
+    <path d="M 25,40 Q 50,65 75,40" fill="#2d3436" stroke="#6c5ce7" stroke-width="3" stroke-linecap="round" />
+    <!-- Alert waves -->
+    <path d="M 20,70 Q 35,60 50,70 Q 65,80 80,70" fill="none" stroke="#6c5ce7" stroke-width="3" stroke-linecap="round" />
+    <path d="M 25,80 Q 37.5,70 50,80 Q 62.5,90 75,80" fill="none" stroke="#6c5ce7" stroke-width="3" stroke-linecap="round" stroke-opacity="0.7" />
+  </g>
+</svg>

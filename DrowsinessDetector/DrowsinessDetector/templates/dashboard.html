@@ -1,0 +1,211 @@
+{% extends "layout.html" %}
+
+{% block head %}
+<title>DrowsAlert - Dashboard</title>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-chart-line me-2"></i> Drowsiness Metrics Dashboard</h5>
+            </div>
+            <div class="card-body">
+                <div class="row mb-4">
+                    <div class="col-md-3 col-6">
+                        <div class="dashboard-stat">
+                            <div class="stat-icon">
+                                <i class="fas fa-hourglass-half"></i>
+                            </div>
+                            <div class="stat-details">
+                                <span class="stat-value" id="totalSessionTime">00:00:00</span>
+                                <span class="stat-label">Total Time</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="dashboard-stat">
+                            <div class="stat-icon text-warning">
+                                <i class="fas fa-bed"></i>
+                            </div>
+                            <div class="stat-details">
+                                <span class="stat-value" id="totalDrowsyTime">00:00:00</span>
+                                <span class="stat-label">Drowsy Time</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="dashboard-stat">
+                            <div class="stat-icon text-danger">
+                                <i class="fas fa-bell"></i>
+                            </div>
+                            <div class="stat-details">
+                                <span class="stat-value" id="totalAlerts">0</span>
+                                <span class="stat-label">Total Alerts</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="dashboard-stat">
+                            <div class="stat-icon text-info">
+                                <i class="fas fa-percentage"></i>
+                            </div>
+                            <div class="stat-details">
+                                <span class="stat-value" id="alertnessPercentage">0%</span>
+                                <span class="stat-label">Alertness</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="chart-container">
+                            <canvas id="drowsinessChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="chart-container mb-4">
+                            <canvas id="alertnessDonut"></canvas>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="blinkRateChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-history me-2"></i> Recent Sessions</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Duration</th>
+                                <th>Drowsy %</th>
+                                <th>Alerts</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recentSessionsTable">
+                            <tr>
+                                <td colspan="4" class="text-center">No session data available</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-lightbulb me-2"></i> Insights & Recommendations</h5>
+            </div>
+            <div class="card-body">
+                <div id="insightsContainer">
+                    <div class="insight-item">
+                        <div class="insight-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="insight-content">
+                            <h5>Best Time to Drive</h5>
+                            <p>Based on your alertness patterns, your most alert times are between <strong>8:00 AM - 11:00 AM</strong>.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="insight-item">
+                        <div class="insight-icon text-warning">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="insight-content">
+                            <h5>Risk Factors</h5>
+                            <p>Your drowsiness increases significantly after <strong>30 minutes</strong> of continuous driving.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="insight-item">
+                        <div class="insight-icon text-info">
+                            <i class="fas fa-coffee"></i>
+                        </div>
+                        <div class="insight-content">
+                            <h5>Recommendations</h5>
+                            <ul class="mb-0">
+                                <li>Take a 15-minute break every 2 hours of driving</li>
+                                <li>Consider a short 20-minute nap if feeling drowsy</li>
+                                <li>Avoid driving between 1:00 PM - 3:00 PM</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i> Understanding Drowsiness</h5>
+            </div>
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <img src="https://images.unsplash.com/photo-1523859597145-32eff6e463ab" alt="Sleepy Driver" class="img-fluid rounded mb-3 mb-md-0">
+                    </div>
+                    <div class="col-md-6">
+                        <h4>The Science of Drowsiness</h4>
+                        <p>Drowsy driving is responsible for thousands of accidents each year. Understanding the signs can save lives:</p>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="alert-sign-box">
+                                    <h5><i class="fas fa-eye me-2"></i> Visual Signs</h5>
+                                    <ul>
+                                        <li>Heavy eyelids</li>
+                                        <li>Frequent blinking</li>
+                                        <li>Difficulty focusing</li>
+                                        <li>Nodding head</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="alert-sign-box">
+                                    <h5><i class="fas fa-brain me-2"></i> Cognitive Signs</h5>
+                                    <ul>
+                                        <li>Wandering thoughts</li>
+                                        <li>Memory lapses</li>
+                                        <li>Missed exits/turns</li>
+                                        <li>Slowed reaction time</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="mt-3">Our system detects these visual cues before you even realize you're drowsy, providing timely alerts to keep you safe.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+<script>
+    // Initialize dashboard specific scripts
+    document.addEventListener('DOMContentLoaded', function() {
+        initDashboard();
+    });
+</script>
+{% endblock %}

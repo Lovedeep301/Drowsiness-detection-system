@@ -1,0 +1,185 @@
+{% extends "layout.html" %}
+
+{% block head %}
+<title>DrowsAlert - Drowsiness Detection</title>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="fas fa-video me-2"></i> Camera Feed</h5>
+                <div>
+                    <button id="startBtn" class="btn btn-primary btn-sm">
+                        <i class="fas fa-play me-1"></i> Start
+                    </button>
+                    <button id="stopBtn" class="btn btn-danger btn-sm" disabled>
+                        <i class="fas fa-stop me-1"></i> Stop
+                    </button>
+                </div>
+            </div>
+            <div class="card-body text-center p-0 position-relative">
+                <div id="cameraPlaceholder" class="camera-placeholder">
+                    <i class="fas fa-video mb-3"></i>
+                    <p>Click Start to begin drowsiness detection</p>
+                </div>
+                <img id="videoFeed" class="img-fluid w-100 d-none" alt="Camera Feed">
+                <div id="drowsyOverlay" class="drowsy-overlay d-none">
+                    <div class="alert-text">DROWSINESS DETECTED</div>
+                </div>
+                <div id="loadingOverlay" class="loading-overlay d-none">
+                    <div class="spinner-border text-light" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-2">Starting camera...</p>
+                </div>
+                <div id="noFaceOverlay" class="no-face-overlay d-none">
+                    <i class="fas fa-user-slash mb-2"></i>
+                    <p>No face detected</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-tachometer-alt me-2"></i> Real-time Metrics</h5>
+            </div>
+            <div class="card-body">
+                <div class="metric-container">
+                    <div class="metric-label">Drowsiness Status</div>
+                    <div id="drowsinessStatus" class="metric-value alert-status">
+                        <span class="status-text">Not Detected</span>
+                        <span class="status-icon"><i class="fas fa-check-circle"></i></span>
+                    </div>
+                </div>
+                
+                <div class="metric-container">
+                    <div class="metric-label">Eye Aspect Ratio (EAR)</div>
+                    <div class="metric-value">
+                        <div class="progress ear-progress">
+                            <div id="earProgressBar" class="progress-bar" role="progressbar" style="width: 0%"></div>
+                        </div>
+                        <span id="earValue">0.00</span>
+                    </div>
+                </div>
+                
+                <div class="metric-container">
+                    <div class="metric-label">Blink Rate (per minute)</div>
+                    <div class="metric-value">
+                        <span id="blinkRateValue">0</span>
+                        <small class="text-muted ms-1">bpm</small>
+                    </div>
+                </div>
+                
+                <div class="metric-container">
+                    <div class="metric-label">Face Detection</div>
+                    <div id="faceDetectionStatus" class="metric-value">
+                        <span class="badge bg-danger">No Face Detected</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-chart-simple me-2"></i> Session Statistics</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-6 mb-3">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="stat-details">
+                                <span class="stat-value" id="sessionTime">00:00</span>
+                                <span class="stat-label">Session Time</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 mb-3">
+                        <div class="stat-card">
+                            <div class="stat-icon text-warning">
+                                <i class="fas fa-bed"></i>
+                            </div>
+                            <div class="stat-details">
+                                <span class="stat-value" id="drowsyTime">00:00</span>
+                                <span class="stat-label">Drowsy Time</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 mb-3">
+                        <div class="stat-card">
+                            <div class="stat-icon text-danger">
+                                <i class="fas fa-bell"></i>
+                            </div>
+                            <div class="stat-details">
+                                <span class="stat-value" id="alertCount">0</span>
+                                <span class="stat-label">Alerts</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 mb-3">
+                        <div class="stat-card">
+                            <div class="stat-icon text-info">
+                                <i class="fas fa-eye"></i>
+                            </div>
+                            <div class="stat-details">
+                                <span class="stat-value" id="blinkCount">0</span>
+                                <span class="stat-label">Blinks</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i> How It Works</h5>
+            </div>
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-md-7">
+                        <h4>Drowsiness Detection Technology</h4>
+                        <p>Our system uses advanced computer vision and machine learning algorithms to detect signs of drowsiness in real-time:</p>
+                        <ul>
+                            <li><strong>Eye Aspect Ratio (EAR):</strong> Measures how open or closed your eyes are</li>
+                            <li><strong>Blink Rate Analysis:</strong> Tracks changes in your normal blinking pattern</li>
+                            <li><strong>Head Pose Estimation:</strong> Detects nodding or drooping head movements</li>
+                            <li><strong>Real-Time Alerts:</strong> Provides immediate audio and visual warnings</li>
+                        </ul>
+                        <p>The system is designed to help prevent accidents caused by drowsy driving by alerting you before you fall asleep.</p>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="how-it-works-image">
+                            <img src="https://images.unsplash.com/photo-1541747277704-ef7fb8e1a31c" alt="Alert Driver" class="img-fluid rounded">
+                            <div class="face-indicators">
+                                <div class="indicator eye-indicator left"></div>
+                                <div class="indicator eye-indicator right"></div>
+                                <div class="indicator mouth-indicator"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Initialize specific page scripts after document loads
+    document.addEventListener('DOMContentLoaded', function() {
+        initDetectionPage();
+    });
+</script>
+{% endblock %}
